@@ -1,0 +1,336 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Realtime</title>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <script src="{{ url_for('static', filename='idle.js') }}"></script>
+
+    <style>
+    .big-container {
+      border: 1px solid #ccc;
+      margin: 10px;
+    }
+    .bottom-left {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+    }
+  </style>
+</head>
+<body>
+
+    <div class="container">
+      <h1>Realtime</h1>
+
+        <!-- <div class="row mb-4">
+            <div class="col big-container align-items-center text-center p-5">
+                <div class="chart-container" style="height:auto;">
+                    <canvas id="graph"></canvas>
+                </div>
+                <div class="h3">title</div>
+            </div>
+            <div class="col">
+                <h1>dummy</h1>
+            </div>
+        </div> -->
+
+        <!-- this is the real row -->
+        <div class="row text-center align-items-center">
+          <div class="col big-container">
+
+            <div class="chart-container m-auto pt-2" style="height: 40vh;">
+              <canvas id="graph1"></canvas>
+            </div>
+
+            <h3>CH1</h3>
+          </div>
+
+          <div class="col big-container">
+
+            <div class="chart-container m-auto pt-2" style="height:auto">
+              <canvas id="graph2"></canvas>
+            </div>
+
+              <h3>CH2</h3>
+          </div>
+        </div>
+
+        <div class="row align-items-center text-center">
+          <div class="col big-container">
+            <div class="chart-container m-auto pt-2" style="height:auto">
+              <canvas id="graph3"></canvas>
+            </div>
+            <h3>CH3</h3>
+        </div>
+          <div class="col big-container">
+            <div class="chart-container m-auto pt-2" style="height: auto;">
+              <canvas id="graph4"></canvas>
+            </div>
+            <h3>CH4</h3>
+        </div>
+        </div>
+
+      </div>
+    
+    <a href="/">
+        <button type="button" class="btn btn-info btn-lg bottom-left">Back</button>
+    </a>
+    <script>
+        const op = {
+            legend: {display: false},
+            scales: {
+                yAxes: [{ticks: {min: -3, max: 5}}]
+            },
+            responsive: true,
+        }
+
+        var c = new Chart("graph", {
+            type: 'line',
+            data: [1,1,1,1],
+            options: op,
+        })
+        var c1 = new Chart("graph1", {
+            type: 'line',
+            data: [1,1,1,1],
+            options: op
+        }) // komen: buat chart lebih lebar dan lebih tinggi
+        var c2 = new Chart("graph2", {
+            type: 'line',
+            data: [1,1,1,1],
+            options: op
+        })
+        var c3 = new Chart("graph3", {
+            type: 'line',
+            data: [1,1,1,1],
+            options: op
+        })
+        var c4 = new Chart("graph4", {
+            type: 'line',
+            data: [1,1,1,1],
+            options: op
+        })
+
+        fetch('/data')
+            .then(response => response.json()) // Parse the JSON response
+            .then(respon => {
+                // Handle the received data
+                const d = respon.data
+                var count = respon.count
+
+                console.log(d);
+
+                const size = 33
+                const graph_data1 = {
+                    labels: Array(size).fill(""),
+                    datasets: [{
+                        fill: false,
+                        lineTesion: 0,
+                        backgroundColor: "rgba(0,0,255,1.0)",
+                        borderColor: "rgba(0,0,255,0.1)",
+                        data: d.Channel1.slice(0, size)
+                    }]
+                }
+                const graph_data2 = {
+                    labels: Array(size).fill(""),
+                    datasets: [{
+                        fill: false,
+                        lineTesion: 0,
+                        backgroundColor: "rgba(0,0,255,1.0)",
+                        borderColor: "rgba(0,0,255,0.1)",
+                        data: d.Channel2.slice(0, size)
+                    }]
+                }
+                const graph_data3 = {
+                    labels: Array(size).fill(""),
+                    datasets: [{
+                        fill: false,
+                        lineTesion: 0,
+                        backgroundColor: "rgba(0,0,255,1.0)",
+                        borderColor: "rgba(0,0,255,0.1)",
+                        data: d.Channel3.slice(0, size)
+                    }]
+                }
+                const graph_data4 = {
+                    labels: Array(size).fill(""),
+                    datasets: [{
+                        fill: false,
+                        lineTesion: 0,
+                        backgroundColor: "rgba(0,0,255,1.0)",
+                        borderColor: "rgba(0,0,255,0.1)",
+                        data: d.Channel4.slice(0, size)
+                    }]
+                }
+
+                console.log(graph_data1)
+
+                var c1 = new Chart("graph1", {
+                    type: 'line',
+                    data: graph_data1,
+                    options: op
+                }) // komen: buat chart lebih lebar dan lebih tinggi
+                var c2 = new Chart("graph2", {
+                    type: 'line',
+                    data: graph_data2,
+                    options: op
+                })
+                var c3 = new Chart("graph3", {
+                    type: 'line',
+                    data: graph_data3,
+                    options: op
+                })
+                var c4 = new Chart("graph4", {
+                    type: 'line',
+                    data: graph_data4,
+                    options: op
+                })
+
+                // interval shift data
+                const changeFileInterval = 30000 //declared here because it relates to shiftinterval
+
+                var cnt = size
+                const shiftTime = 200
+                const shiftInterval = setInterval(() => {
+                    // console.log('update')
+                    c1.data.datasets[0].data.shift()
+                    c1.data.datasets[0].data.push(d.Channel1[cnt])
+                    c1.update()
+
+                    c2.data.datasets[0].data.shift()
+                    c2.data.datasets[0].data.push(d.Channel2[cnt])
+                    c2.update()
+
+                    c3.data.datasets[0].data.shift()
+                    c3.data.datasets[0].data.push(d.Channel3[cnt])
+                    c3.update()
+
+                    c4.data.datasets[0].data.shift()
+                    c4.data.datasets[0].data.push(d.Channel4[cnt])
+                    c4.update()
+                    cnt += 1
+                }, shiftTime);
+
+                // delete shift interval
+                setTimeout(() => {
+                  clearInterval(shiftInterval)
+                  console.log('clear interval 1')
+                }, changeFileInterval)
+
+                // repeat action
+                setInterval(() => {
+                    fetch('/data/'+(count+1))
+                    .then(response => response.json()) // Parse the JSON response
+                    .then(respon => {
+                        // Handle the received data
+                        const d = respon.data
+                        count += 1
+
+                        console.log('change file')
+                        console.log('count ' + count)
+                        console.log(d);
+
+                        const graph_data1 = {
+                            labels: Array(size).fill(""),
+                            datasets: [{
+                                fill: false,
+                                lineTesion: 0,
+                                backgroundColor: "rgba(0,0,255,1.0)",
+                                borderColor: "rgba(0,0,255,0.1)",
+                                data: d.Channel1.slice(0, size)
+                            }]
+                        }
+                        const graph_data2 = {
+                            labels: Array(size).fill(""),
+                            datasets: [{
+                                fill: false,
+                                lineTesion: 0,
+                                backgroundColor: "rgba(0,0,255,1.0)",
+                                borderColor: "rgba(0,0,255,0.1)",
+                                data: d.Channel2.slice(0, size)
+                            }]
+                        }
+                        const graph_data3 = {
+                            labels: Array(size).fill(""),
+                            datasets: [{
+                                fill: false,
+                                lineTesion: 0,
+                                backgroundColor: "rgba(0,0,255,1.0)",
+                                borderColor: "rgba(0,0,255,0.1)",
+                                data: d.Channel3.slice(0, size)
+                            }]
+                        }
+                        const graph_data4 = {
+                            labels: Array(size).fill(""),
+                            datasets: [{
+                                fill: false,
+                                lineTesion: 0,
+                                backgroundColor: "rgba(0,0,255,1.0)",
+                                borderColor: "rgba(0,0,255,0.1)",
+                                data: d.Channel4.slice(0, size)
+                            }]
+                        }
+
+                        var c1 = new Chart("graph1", {
+                            type: 'line',
+                            data: graph_data1,
+                            options: op
+                        }) // komen: buat chart lebih lebar dan lebih tinggi
+                        var c2 = new Chart("graph2", {
+                            type: 'line',
+                            data: graph_data2,
+                            options: op
+                        })
+                        var c3 = new Chart("graph3", {
+                            type: 'line',
+                            data: graph_data3,
+                            options: op
+                        })
+                        var c4 = new Chart("graph4", {
+                            type: 'line',
+                            data: graph_data4,
+                            options: op
+                        })
+
+                        var cnt = size
+                        
+                        // interval shift data
+                        const shiftInterval = setInterval(() => {
+                            // console.log('update')
+                            c1.data.datasets[0].data.shift()
+                            c1.data.datasets[0].data.push(d.Channel1[cnt])
+                            c1.update()
+
+                            c2.data.datasets[0].data.shift()
+                            c2.data.datasets[0].data.push(d.Channel2[cnt])
+                            c2.update()
+
+                            c3.data.datasets[0].data.shift()
+                            c3.data.datasets[0].data.push(d.Channel3[cnt])
+                            c3.update()
+
+                            c4.data.datasets[0].data.shift()
+                            c4.data.datasets[0].data.push(d.Channel4[cnt])
+                            c4.update()
+                            cnt += 1
+                        }, shiftTime);
+
+                        // delete shiftinterval
+                        setTimeout(() => {
+                          clearInterval(shiftInterval)
+                          console.log('clear interval ke 2')
+                        }, changeFileInterval)
+                    })
+                    .catch(error => console.error('Error:', error));
+                    }, changeFileInterval); // komen: jangan lupa ganti jadi 30 detik
+            })
+            .catch(error => console.error('Error:', error));
+            
+    </script>
+</body>
+</html>
+
+

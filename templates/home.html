@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HMI</title>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<style>
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  .row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .big-container {
+    width: 200px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+    margin: 10px;
+  }
+  .bottom-left {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>WELCOME TO PROJECT HMI</h1>
+
+  <div class="row">
+    <a href="/realtime" class="big-container">
+      <button type="button" class="btn btn-primary btn-lg">Realtime</button>
+    </a>
+    <a href="/dashboard" class="big-container">
+      <button type="button" class="btn btn-secondary btn-lg">Dashboard</button>
+    </a>
+  </div>
+  <div class="row">
+    <a href="/diagram" class="big-container">
+      <button type="button" class="btn btn-success btn-lg">HV Network Diagram</button>
+    </a>
+    <a href="/configuration" class="big-container">
+      <button type="button" class="btn btn-danger btn-lg">Software & Unit Configuration</button>
+    </a>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
